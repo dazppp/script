@@ -1,13 +1,5 @@
-local success, library = pcall(function()
-    return loadstring(game:HttpGet(https://raw.githubusercontent.com/weakhoes/Roblox-UI-Libs/refs/heads/main/Jan%20Lib/Jan%20Lib%20Source.lua'))()
-end)
+loadstring(game:HttpGet(https://raw.githubusercontent.com/weakhoes/Roblox-UI-Libs/refs/heads/main/Jan%20Lib/Jan%20Lib%20Source.lua'))()
 
-if not success then
-    warn("Failed to load UI library:", library)
-    return
-end
-
-if not library or not library.initialized then
     library = {
         cheatname = "Bypassin",
         gamename = "Bronx 3", 
