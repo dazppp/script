@@ -1,0 +1,654 @@
+local success, library = pcall(function()
+    return loadstring(game:HttpGet('https://garfieldscripts.xyz/ui-libs/janlib.lua'))()
+end)
+
+if not success then
+    warn("Failed to load UI library:", library)
+    return
+end
+
+if not library or not library.initialized then
+    library = {
+        cheatname = "Bypassin",
+        gamename = "Bronx 3", 
+        foldername = "BypassinConfigs",
+        fileext = ".config",
+        initialized = true
+    }
+end
+
+-- Create tabs
+local PlayersTab = library:AddTab("Players")
+local MainTab = library:AddTab("Main")
+local CombatTab = library:AddTab("Combat")
+local VisualsTab = library:AddTab("Visuals") 
+local SettingsTab = library:AddTab("Settings")
+
+-- Players tab setup
+local PlayersColumn1 = PlayersTab:AddColumn()
+local MovementSection = PlayersColumn1:AddSection("Movement")
+
+MovementSection:AddDivider("Movement Options")
+MovementSection:AddToggle{text = "Infinite Jump", flag = "InfiniteJump"}
+MovementSection:AddToggle{text = "Fly", flag = "FlyEnabled"}:AddBind({flag = "FlyBind", key = "F"})
+MovementSection:AddSlider{text = "Fly Speed", flag = "FlySpeed", min = 1, max = 20, value = 5, suffix = "studs/s"}
+MovementSection:AddToggle{text = "No Clip", flag = "NoClip"}
+MovementSection:AddSlider{text = "Walk Speed", flag = "WalkSpeed", min = 16, max = 200, value = 16, suffix = "studs/s"}
+MovementSection:AddSlider{text = "Jump Power", flag = "JumpPower", min = 50, max = 300, value = 50, suffix = "power"}
+
+local PlayersColumn2 = PlayersTab:AddColumn()
+local PlayerModesSection = PlayersColumn2:AddSection("Player Modes")
+
+PlayerModesSection:AddDivider("Player Protection")
+PlayerModesSection:AddToggle{text = "God Mode", flag = "GodMode"}
+PlayerModesSection:AddToggle{text = "Anti Fall Damage", flag = "AntiFallDamage"}
+PlayerModesSection:AddToggle{text = "Anti Jail", flag = "AntiJail"}
+
+-- Main Tab Setup
+local MainColumn1 = MainTab:AddColumn()
+local DupeSection = MainColumn1:AddSection("Dupe")
+
+DupeSection:AddDivider("Duplication")
+DupeSection:AddButton{text = "Dupe (With Rejoin)", callback = function()
+    -- Create notification
+    local notification = Instance.new("ScreenGui")
+    local frame = Instance.new("Frame")
+    local text = Instance.new("TextLabel")
+    
+    notification.Name = "DupeNotification"
+    notification.Parent = game:GetService("CoreGui")
+    
+    frame.Name = "Frame"
+    frame.Parent = notification
+    frame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    frame.BorderSizePixel = 0
+    frame.Position = UDim2.new(0.5, -150, 0.8, 0)
+    frame.Size = UDim2.new(0, 300, 0, 50)
+    
+    text.Name = "Text"
+    text.Parent = frame
+    text.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    text.BackgroundTransparency = 1
+    text.BorderSizePixel = 0
+    text.Size = UDim2.new(1, 0, 1, 0)
+    text.Font = Enum.Font.SourceSansBold
+    text.Text = "Duping items... Rejoining in 30 seconds"
+    text.TextColor3 = Color3.fromRGB(255, 255, 255)
+    text.TextSize = 16
+    
+    -- Wait 30 seconds then rejoin
+    spawn(function()
+        local count = 30
+        while count > 0 do
+            text.Text = "Duping items... Rejoining in " .. count .. " seconds"
+            wait(1)
+            count = count - 1
+        end
+        
+        -- Rejoin same server
+        local ts = game:GetService("TeleportService")
+        local p = game:GetService("Players").LocalPlayer
+        ts:Teleport(game.PlaceId, p)
+    end)
+end}}
+
+DupeSection:AddButton{text = "Safe Dupe", callback = function()
+    -- Implement safe dupe functionality
+end}
+
+DupeSection:AddButton{text = "Teleport to Safe", callback = function()
+    -- Teleport to safe location
+end}
+
+local MainColumn2 = MainTab:AddColumn()
+local AutofarmSection = MainColumn2:AddSection("Autofarm")
+
+AutofarmSection:AddDivider("Auto Collection")
+AutofarmSection:AddToggle{text = "Auto Pick Up Trash", flag = "AutoTrash"}
+AutofarmSection:AddToggle{text = "Auto Pick Up Money", flag = "AutoMoney"}
+AutofarmSection:AddToggle{text = "Auto Pick Up Items", flag = "AutoItems"}
+
+-- Combat Tab Setup
+local CombatColumn1 = CombatTab:AddColumn()
+local AimbotSection = CombatColumn1:AddSection("Aimbot")
+
+AimbotSection:AddDivider("Main")
+AimbotSection:AddToggle{text = "Enabled", flag = "AimbotEnabled"}
+AimbotSection:AddToggle{text = "Big Hitbox", flag = "BigHitbox"}
+AimbotSection:AddSlider{text = "Hitbox Size", flag = "HitboxSize", min = 2, max = 20, value = 5, suffix = "studs"}
+AimbotSection:AddSlider{text = "Aimbot FOV", flag = "AimbotFov", min = 0, max = 750, value = 105, suffix = "°"}
+AimbotSection:AddSlider{text = "Smoothing Factor", flag = "Smoothing", min = 0, max = 30, value = 3, suffix = "%"}
+AimbotSection:AddList({text = "Hit Box", flag = "AimbotHitbox", value = "Head", values = {"Head", "Torso"}})
+AimbotSection:AddList({text = "Aimbot Key", flag = "AimbotKey", value = "On Aim", values = {"On Aim", "On Shoot"}})
+AimbotSection:AddDivider("Draw Fov")
+AimbotSection:AddToggle{text = "Enabled", flag = "CircleEnabled"}:AddColor({flag = "CircleColor", color = Color3.new(1, 1, 1)})
+AimbotSection:AddSlider{text = "Num Sides", flag = "CircleNumSides", min = 3, max = 48, value = 48, suffix = "°"}
+
+local CombatColumn2 = CombatTab:AddColumn()
+local SilentAimSection = CombatColumn2:AddSection("Silent Aim")
+
+SilentAimSection:AddDivider("Main")
+SilentAimSection:AddToggle{text = "Enabled", flag = "SilentAimEnabled"}
+SilentAimSection:AddSlider{text = "Silent Aim FOV", flag = "SilentAimFOV", min = 0, max = 750, value = 105, suffix = "°"}
+SilentAimSection:AddSlider{text = "Hit Chances", flag = "HitChances", min = 0, max = 100, value = 100, suffix = "%"}
+SilentAimSection:AddList({text = "Redirection Mode", flag = "RedirectionMode", value = "P Mode", values = {"P Mode", "Normal Mode"}})
+SilentAimSection:AddList({text = "Hit Box", flag = "SilentAimHitbox", value = "Head", values = {"Head", "Torso"}})
+SilentAimSection:AddDivider("Draw Fov")
+SilentAimSection:AddToggle{text = "Enabled", flag = "Circle2Enabled"}:AddColor({flag = "Circle2Color", color = Color3.new(1, 1, 1)})
+SilentAimSection:AddSlider{text = "Num Sides", flag = "Circle2NumSides", min = 3, max = 48, value = 48, suffix = "°"}
+SilentAimSection:AddDivider("Checks")
+SilentAimSection:AddToggle{text = "Visible Check", flag = "VisibleCheck"}
+
+local VisualsColumn1 = VisualsTab:AddColumn()
+local VisualsMainSection = VisualsColumn1:AddSection("Visuals")
+
+VisualsMainSection:AddDivider("Main")
+VisualsMainSection:AddToggle{text = "Enabled", flag = "VisualsEnabled"}
+VisualsMainSection:AddToggle{text = "ESP", flag = "ESPEnabled"}
+VisualsMainSection:AddToggle{text = "Boxes", flag = "BoxESP"}:AddColor({flag = "BoxColor", color = Color3.new(1, 1, 1)})
+VisualsMainSection:AddToggle{text = "Names", flag = "NameESP"}:AddColor({flag = "NameColor", color = Color3.new(1, 1, 1)})
+VisualsMainSection:AddToggle{text = "Health Bars", flag = "HealthESP"}
+VisualsMainSection:AddToggle{text = "Tracers", flag = "TracerESP"}:AddColor({flag = "TracerColor", color = Color3.new(1, 1, 1)})
+VisualsMainSection:AddToggle{text = "Distance", flag = "DistanceESP"}
+VisualsMainSection:AddSlider{text = "ESP Distance", flag = "ESPMaxDistance", min = 50, max = 2000, value = 1000, suffix = " studs"}
+
+local VisualsColumn2 = VisualsTab:AddColumn()
+local LocalVisualsSection = VisualsColumn2:AddSection("Local Visuals")
+
+LocalVisualsSection:AddDivider("Main")
+LocalVisualsSection:AddToggle{text = "Enabled", flag = "LocalVisualsEnabled"}
+LocalVisualsSection:AddToggle{text = "Custom Arm", flag = "CustomArm"}:AddColor({flag = "ArmColor", color = Color3.new(0.599, 0.447, 0.971)})
+LocalVisualsSection:AddSlider{text = "Transparency", flag = "ArmTransparency", min = 0.10, max = 0.95, float = 0.01, value = 0.85, suffix = "%"}
+LocalVisualsSection:AddList({text = "Material", flag = "ArmMaterial", value = "ForceField", values = {"ForceField", "Neon", "SmoothPlastic"}})
+LocalVisualsSection:AddToggle{text = "Custom Weapon", flag = "CustomWeapon"}:AddColor({flag = "WeaponColor", color = Color3.new(1, 1, 1)})
+LocalVisualsSection:AddSlider{text = "Transparency", flag = "WeaponTransparency", min = 0.10, max = 0.95, float = 0.01, value = 0.85, suffix = "%"}
+LocalVisualsSection:AddList({text = "Material", flag = "WeaponMaterial", value = "ForceField", values = {"ForceField", "Neon", "SmoothPlastic"}})
+
+local SettingsColumn1 = SettingsTab:AddColumn()
+local SettingsMainSection = SettingsColumn1:AddSection("Menu")
+
+SettingsMainSection:AddBind({text = "Open / Close", flag = "UI Toggle", nomouse = true, key = "End", callback = function()
+    library:Close()
+end})
+
+SettingsMainSection:AddColor({text = "Accent Color", flag = "Menu Accent Color", color = Color3.new(0.599, 0.447, 0.971), callback = function(color)
+    if library.currentTab then
+        library.currentTab.button.TextColor3 = color
+    end
+    for i, v in pairs(library.theme) do
+        v[(v.ClassName == "TextLabel" and "TextColor3") or (v.ClassName == "ImageLabel" and "ImageColor3") or "BackgroundColor3"] = color
+    end
+end})
+
+local backgroundlist = {
+    Floral = "rbxassetid://5553946656",
+    Flowers = "rbxassetid://6071575925",
+    Circles = "rbxassetid://6071579801",
+    Hearts = "rbxassetid://6073763717"
+}
+
+local back = SettingsMainSection:AddList({text = "Background", max = 4, flag = "background", values = {"Floral", "Flowers", "Circles", "Hearts"}, value = "Floral", callback = function(v)
+    if library.main then
+        library.main.Image = backgroundlist[v]
+    end
+end})
+
+back:AddColor({flag = "backgroundcolor", color = Color3.new(), callback = function(color)
+    if library.main then
+        library.main.ImageColor3 = color
+    end
+end, trans = 1, calltrans = function(trans)
+    if library.main then
+        library.main.ImageTransparency = 1 - trans
+    end
+end})
+
+SettingsMainSection:AddSlider({text = "Tile Size", min = 50, max = 500, value = 50, callback = function(size)
+    if library.main then
+        library.main.TileSize = UDim2.new(0, size, 0, size)
+    end
+end})
+
+local SettingsColumn2 = SettingsTab:AddColumn()
+local ConfigSection = SettingsColumn2:AddSection("Configs")
+
+ConfigSection:AddBox({text = "Config Name", skipflag = true})
+ConfigSection:AddList({text = "Configs", skipflag = true, value = "", flag = "Config List", values = library:GetConfigs and library:GetConfigs() or {}})
+
+ConfigSection:AddButton({text = "Create", callback = function()
+    if library.GetConfigs then
+        library:GetConfigs()
+        writefile(library.foldername .. "/" .. library.flags["Config Name"] .. library.fileext, "{}")
+        library.options["Config List"]:AddValue(library.flags["Config Name"])
+    end
+end})
+
+ConfigSection:AddButton({text = "Save", callback = function()
+    if library.SaveConfig then
+        library:SaveConfig(library.flags["Config List"])
+    end
+end})
+
+ConfigSection:AddButton({text = "Load", callback = function()
+    if library.LoadConfig then
+        library:LoadConfig(library.flags["Config List"])
+    end
+end})
+
+ConfigSection:AddButton({text = "Delete", callback = function()
+    if library.GetConfigs then
+        local config = library.flags["Config List"]
+        if table.find(library:GetConfigs(), config) and isfile(library.foldername .. "/" .. config .. library.fileext) then
+            library.options["Config List"]:RemoveValue(config)
+            delfile(library.foldername .. "/" .. config .. library.fileext)
+        end
+    end
+end})
+
+local players = game:GetService("Players")
+local player = players.LocalPlayer
+local userInputService = game:GetService("UserInputService")
+local runService = game:GetService("RunService")
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+
+local connections = {}
+
+local function setupInfiniteJump()
+    if connections.infiniteJump then
+        connections.infiniteJump:Disconnect()
+        connections.infiniteJump = nil
+    end
+    
+    if library.flags.InfiniteJump then
+        connections.infiniteJump = userInputService.JumpRequest:Connect(function()
+            if character and humanoid then
+                humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+            end
+        end)
+    end
+end
+
+local function updateWalkSpeed()
+    if character and humanoid and library.flags.WalkSpeed then
+        humanoid.WalkSpeed = library.flags.WalkSpeed
+    end
+end
+
+local function updateJumpPower()
+    if character and humanoid and library.flags.JumpPower then
+        humanoid.JumpPower = library.flags.JumpPower
+    end
+end
+
+local flying = false
+local function setupFly()
+    if connections.fly then
+        connections.fly:Disconnect()
+        connections.fly = nil
+    end
+    
+    if connections.flyInput then
+        connections.flyInput:Disconnect()
+        connections.flyInput = nil
+    end
+    
+    if library.flags.FlyEnabled then
+        flying = true
+        
+        local flySpeed = library.flags.FlySpeed or 5
+        local bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+        bodyVelocity.Parent = rootPart
+        
+        local bodyGyro = Instance.new("BodyGyro")
+        bodyGyro.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+        bodyGyro.P = 9e4
+        bodyGyro.Parent = rootPart
+        
+        local moveDirection = {
+            Forward = false,
+            Backward = false,
+            Left = false,
+            Right = false,
+            Up = false,
+            Down = false
+        }
+        
+        connections.flyInput = userInputService.InputBegan:Connect(function(input, processed)
+            if processed then return end
+            
+            if input.KeyCode == Enum.KeyCode.W then
+                moveDirection.Forward = true
+            elseif input.KeyCode == Enum.KeyCode.S then
+                moveDirection.Backward = true
+            elseif input.KeyCode == Enum.KeyCode.A then
+                moveDirection.Left = true
+            elseif input.KeyCode == Enum.KeyCode.D then
+                moveDirection.Right = true
+            elseif input.KeyCode == Enum.KeyCode.Space then
+                moveDirection.Up = true
+            elseif input.KeyCode == Enum.KeyCode.LeftControl then
+                moveDirection.Down = true
+            end
+        end)
+        
+        connections.flyInputEnd = userInputService.InputEnded:Connect(function(input, processed)
+            if processed then return end
+            
+            if input.KeyCode == Enum.KeyCode.W then
+                moveDirection.Forward = false
+            elseif input.KeyCode == Enum.KeyCode.S then
+                moveDirection.Backward = false
+            elseif input.KeyCode == Enum.KeyCode.A then
+                moveDirection.Left = false
+            elseif input.KeyCode == Enum.KeyCode.D then
+                moveDirection.Right = false
+            elseif input.KeyCode == Enum.KeyCode.Space then
+                moveDirection.Up = false
+            elseif input.KeyCode == Enum.KeyCode.LeftControl then
+                moveDirection.Down = false
+            end
+        end)
+        
+        connections.fly = runService.Heartbeat:Connect(function()
+            if character and rootPart and humanoid then
+                local camera = workspace.CurrentCamera
+                local flySpeed = library.flags.FlySpeed or 5
+                
+                bodyGyro.CFrame = CFrame.new(rootPart.Position, rootPart.Position + camera.CFrame.LookVector)
+                
+                local velocity = Vector3.new(0, 0, 0)
+                
+                if moveDirection.Forward then
+                    velocity = velocity + camera.CFrame.LookVector
+                end
+                if moveDirection.Backward then
+                    velocity = velocity - camera.CFrame.LookVector
+                end
+                if moveDirection.Left then
+                    velocity = velocity - camera.CFrame.RightVector
+                end
+                if moveDirection.Right then
+                    velocity = velocity + camera.CFrame.RightVector
+                end
+                if moveDirection.Up then
+                    velocity = velocity + Vector3.new(0, 1, 0)
+                end
+                if moveDirection.Down then
+                    velocity = velocity - Vector3.new(0, 1, 0)
+                end
+                
+                if velocity.Magnitude > 0 then
+                    velocity = velocity.Unit * flySpeed
+                end
+                
+                bodyVelocity.Velocity = velocity
+            end
+        end)
+    else
+        flying = false
+        for _, child in pairs(rootPart:GetChildren()) do
+            if child:IsA("BodyVelocity") or child:IsA("BodyGyro") then
+                child:Destroy()
+            end
+        end
+    end
+end
+
+local function setupNoClip()
+    if connections.noClip then
+        connections.noClip:Disconnect()
+        connections.noClip = nil
+    end
+    
+    if library.flags.NoClip then
+        connections.noClip = runService.Stepped:Connect(function()
+            if character then
+                for _, part in pairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end)
+    end
+end
+
+local function setupGodMode()
+    if library.flags.GodMode and character and humanoid then
+        humanoid.MaxHealth = math.huge
+        humanoid.Health = math.huge
+        
+        if not connections.godMode then
+            connections.godMode = humanoid.HealthChanged:Connect(function()
+                if library.flags.GodMode and humanoid.Health < humanoid.MaxHealth then
+                    humanoid.Health = humanoid.MaxHealth
+                end
+            end)
+        end
+    elseif connections.godMode then
+        connections.godMode:Disconnect()
+        connections.godMode = nil
+        
+        if character and humanoid then
+            humanoid.MaxHealth = 100
+            humanoid.Health = 100
+        end
+    end
+end
+
+local function setupAntiFallDamage()
+    if connections.antiFallDamage then
+        connections.antiFallDamage:Disconnect()
+        connections.antiFallDamage = nil
+    end
+    
+    if library.flags.AntiFallDamage then
+        connections.antiFallDamage = runService.Heartbeat:Connect(function()
+            if character and humanoid then
+                if humanoid:GetState() == Enum.HumanoidStateType.Freefall then
+                    humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                end
+            end
+        end)
+    end
+end
+
+local function setupAntiJail()
+    if connections.antiJail then
+        connections.antiJail:Disconnect()
+        connections.antiJail = nil
+    end
+    
+    if library.flags.AntiJail then
+        connections.antiJail = runService.Heartbeat:Connect(function()
+            local jailParts = workspace:FindFirstChild("Jail")
+            if jailParts then
+                jailParts:Destroy()
+            end
+            
+            if character then
+                local handcuffs = character:FindFirstChild("Handcuffs")
+                if handcuffs then
+                    handcuffs:Destroy()
+                end
+            end
+        end)
+    end
+end
+
+local function setupAutofarm()
+    if connections.autoTrash then
+        connections.autoTrash:Disconnect()
+        connections.autoTrash = nil
+    end
+    
+    if connections.autoMoney then
+        connections.autoMoney:Disconnect()
+        connections.autoMoney = nil
+    end
+    
+    if connections.autoItems then
+        connections.autoItems:Disconnect()
+        connections.autoItems = nil
+    end
+    
+    if library.flags.AutoTrash or library.flags.AutoMoney or library.flags.AutoItems then
+        connections.autoCollect = runService.Heartbeat:Connect(function()
+            local trashItems = {"Trash", "TrashBag", "Garbage"}
+            local moneyItems = {"Money", "Cash", "Moneybag"}
+            local otherItems = {"Item", "Gun", "Knife"}
+            
+            for _, obj in pairs(workspace:GetChildren()) do
+                if obj:IsA("BasePart") or obj:IsA("Model") then
+                    local distance = (rootPart.Position - obj:GetModelCFrame().Position).Magnitude
+                    
+                    if distance <= 15 then
+                        if library.flags.AutoTrash then
+                            for _, trashName in pairs(trashItems) do
+                                if obj.Name:lower():find(trashName:lower()) then
+                                    local pickupRemote = game:GetService("ReplicatedStorage"):FindFirstChild("PickupItem")
+                                    if pickupRemote then
+                                        pickupRemote:FireServer(obj)
+                                    end
+                                end
+                            end
+                        end
+                        
+                        if library.flags.AutoMoney then
+                            for _, moneyName in pairs(moneyItems) do
+                                if obj.Name:lower():find(moneyName:lower()) then
+                                    local pickupRemote = game:GetService("ReplicatedStorage"):FindFirstChild("PickupItem")
+                                    if pickupRemote then
+                                        pickupRemote:FireServer(obj)
+                                    end
+                                end
+                            end
+                        end
+                        
+                        if library.flags.AutoItems then
+                            for _, itemName in pairs(otherItems) do
+                                if obj.Name:lower():find(itemName:lower()) then
+                                    local pickupRemote = game:GetService("ReplicatedStorage"):FindFirstChild("PickupItem")
+                                    if pickupRemote then
+                                        pickupRemote:FireServer(obj)
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+    end
+end
+
+local function setupBigHitbox()
+    if connections.bigHitbox then
+        connections.bigHitbox:Disconnect()
+        connections.bigHitbox = nil
+    end
+    
+    if library.flags.BigHitbox then
+        connections.bigHitbox = runService.Heartbeat:Connect(function()
+            for _, otherPlayer in pairs(players:GetPlayers()) do
+                if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    local targetChar = otherPlayer.Character
+                    local hitboxSize = library.flags.HitboxSize or 5
+                    
+                    if targetChar:FindFirstChild("HumanoidRootPart") then
+                        targetChar.HumanoidRootPart.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+                        targetChar.HumanoidRootPart.Transparency = 0.7
+                        targetChar.HumanoidRootPart.CanCollide = false
+                    end
+                    
+                    if library.flags.AimbotHitbox == "Head" and targetChar:FindFirstChild("Head") then
+                        targetChar.Head.Size = Vector3.new(hitboxSize, hitboxSize, hitboxSize)
+                        targetChar.Head.Transparency = 0.7
+                        targetChar.Head.CanCollide = false
+                    end
+                end
+            end
+        end)
+    else
+        for _, otherPlayer in pairs(players:GetPlayers()) do
+            if otherPlayer ~= player and otherPlayer.Character then
+                local targetChar = otherPlayer.Character
+                
+                if targetChar:FindFirstChild("HumanoidRootPart") then
+                    targetChar.HumanoidRootPart.Size = Vector3.new(2, 2, 1)
+                    targetChar.HumanoidRootPart.Transparency = 1
+                end
+                
+                if targetChar:FindFirstChild("Head") then
+                    targetChar.Head.Size = Vector3.new(1, 1, 1)
+                    targetChar.Head.Transparency = 0
+                end
+            end
+        end
+    end
+end
+
+player.CharacterAdded:Connect(function(newCharacter)
+    character = newCharacter
+    humanoid = character:WaitForChild("Humanoid")
+    rootPart = character:WaitForChild("HumanoidRootPart")
+    
+    updateWalkSpeed()
+    updateJumpPower()
+    setupInfiniteJump()
+    setupFly()
+    setupNoClip()
+    setupGodMode()
+    setupAntiFallDamage()
+    setupAntiJail()
+    setupBigHitbox()
+end)
+
+library.OnLoad = function()
+    setupInfiniteJump()
+    updateWalkSpeed()
+    updateJumpPower()
+    setupFly()
+    setupNoClip()
+    setupGodMode()
+    setupAntiFallDamage()
+    setupAntiJail()
+    setupAutofarm()
+    setupBigHitbox()
+    
+    library.OnFlagChanged = function(flag, value)
+        if flag == "InfiniteJump" then
+            setupInfiniteJump()
+        elseif flag == "WalkSpeed" then
+            updateWalkSpeed()
+        elseif flag == "JumpPower" then
+            updateJumpPower()
+        elseif flag == "FlyEnabled" then
+            setupFly()
+        elseif flag == "FlySpeed" then
+        elseif flag == "NoClip" then
+            setupNoClip()
+        elseif flag == "GodMode" then
+            setupGodMode()
+        elseif flag == "AntiFallDamage" then
+            setupAntiFallDamage()
+        elseif flag == "AntiJail" then
+            setupAntiJail()
+        elseif flag == "AutoTrash" or flag == "AutoMoney" or flag == "AutoItems" then
+            setupAutofarm()
+        elseif flag == "BigHitbox" or flag == "HitboxSize" then
+            setupBigHitbox()
+        end
+    end
+}
+
+if library.Init then
+    library:Init()
+    if library.tabs and #library.tabs > 0 then
+        library:selectTab(library.tabs[1])
+    end
+end
